@@ -24,6 +24,16 @@ trait Game {
         if (c.valid) Some(c) else None
       }
     }
+
+    implicit class UnitOps(self: GameUnit) {
+      def valid: Boolean =
+        self.members.forall(_.valid)
+
+      def apply(d: Direction): Option[GameUnit] = {
+        val u = self.move(d)
+        if (u.valid) Some(u) else None
+      }
+    }
   }
   object GameState {
 
@@ -44,8 +54,5 @@ trait Game {
       new GameState(board, source, width, height)
     }
   }
-
-
-
 }
 object Game extends Game

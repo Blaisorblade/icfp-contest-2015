@@ -63,9 +63,11 @@ case class Cell(x: Int, y: Int) {
     x <= lowerRight.x && y <= lowerRight.y
 }
 
-case class GameUnit(
-  members: List[Cell],
-  pivot: Cell)
+case class GameUnit(members: List[Cell], pivot: Cell) {
+  def move(d: Direction): GameUnit = GameUnit(
+    members map (_ move d),
+    pivot move d)
+}
 
 
 // Output Data

@@ -6,6 +6,12 @@ import org.scalatest.matchers._
 
 
 class DisplacementTest extends FunSpec with Matchers {
+  describe("Rotation") {
+    List.iterate[Direction](W, 6)(Direction.rotateClockwise) shouldBe
+      Direction.dirs
+    List.iterate[Direction](SW, 6)(Direction.rotateCounterClockwise).reverse shouldBe
+      Direction.dirs
+  }
 
   describe("Move Cell(2, 4)") {
     val c = Cell(2, 4)

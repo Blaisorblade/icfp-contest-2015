@@ -11,6 +11,29 @@ case object E  extends Direction
 case object SW extends Direction
 case object SE extends Direction
 
+object Direction {
+  //Angle w.r.t West (Clockwise) = 60 deg. * id
+  def toId(d: Direction) =
+    d match {
+      case W  => 0
+      case NW => 1
+      case NE => 2
+      case E  => 3
+      case SE => 4
+      case SW => 5
+    }
+
+  val dirs = List(W, NW, NE, E, SE, SW)
+
+  def toDir(id: Int): Direction = dirs(id)
+
+  def dir(clockwise: Boolean) = if (clockwise) 1 else - 1
+  def rotate(d: Direction, clockwise: Boolean) = toDir((toId(d) + dir(clockwise)) % 6)
+
+  def rotateClockwise(d: Direction) = rotate(d, true)
+  def rotateCounterClockwise(d: Direction) = rotate(d, false)
+}
+
 // Input Data
 case class Problem(
   id: Int,

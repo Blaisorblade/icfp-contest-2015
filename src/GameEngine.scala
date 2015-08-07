@@ -24,17 +24,23 @@ trait Game {
   /**
    * Represents a single game.
    *
-   * currentUnit is None at the beginning and when the game has ended. In the latter case
+   * currentUnit is None only when the game has ended; then also source is empty.
    */
   case class GameState(
     board: Board,
     source: List[GameUnit],
     width: Int,
     height: Int,
-    score: Score = Score(0, 0),
-    currentUnit: Option[GameUnit] = None
+    currentUnit: Option[GameUnit],
+    score: Score = Score(0, 0)
   ) {
-    def hasEnded = currentUnit.isEmpty && source.isEmpty
+
+    def hasEnded: Boolean = {
+      val ret = currentUnit.isEmpty
+      assert (ret == source.isEmpty)
+      ret
+    }
+
     def filled(c: Cell): Boolean = board(c.x)(c.y)
 
     implicit class CellOps(self: Cell) {
@@ -110,7 +116,7 @@ trait Game {
           source.tail
         else
           Nil
-      GameState(newBoard, newSource, width, height, score(gameUnitToLock, clearedRows), source.headOption)
+      GameState(newBoard, newSource, width, height, source.headOption, score(gameUnitToLock, clearedRows))
     }
   }
 
@@ -129,7 +135,8 @@ trait Game {
 
       filled.foreach { case Cell(x, y) => board(x)(y) = true }
 
-      new GameState(board, source, width, height)
+      //Preload the first GameUnit
+      GameState(board, source.tail, width, height, Some(source.head))
     }
   }
 }

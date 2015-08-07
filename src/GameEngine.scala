@@ -52,6 +52,22 @@ trait Game {
         val u = self.move(d)
         if (u.valid) Some(u) else None
       }
+
+      def spawn: Option[GameUnit] = {
+        import self._
+        val minY = members.map(_.y).min //Seems to always be 0.
+        val minX = members.map(_.x).min //Not always 0.
+        val maxX = members.map(_.x).max
+        val unitWidth = maxX - minX + 1
+        val expectedMinX: Int = (width - unitWidth) / 2
+        val xDelta: Int = expectedMinX - minX
+        val dir = if (xDelta < 0) W else E
+        val newUnit = self.move(dir, xDelta.abs)
+        if (newUnit.valid)
+          Some(newUnit)
+        else
+          None
+      }
     }
   }
   object GameState {

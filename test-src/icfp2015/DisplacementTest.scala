@@ -37,7 +37,7 @@ class DisplacementTest extends FunSpec with Matchers {
 
   val dummyGameUnit = GameUnit(Nil, Cell(0, 0))
 
-  val aGameState = GameState(Board.empty(10, 10), Nil, -1, 10, 10, Some(dummyGameUnit))
+  val aGameState = GameState(Board.empty(10, 10), Nil, Nil, -1, 10, 10, Some(dummyGameUnit))
 
   describe("Move/check Cell(1, 1)") {
     import aGameState._

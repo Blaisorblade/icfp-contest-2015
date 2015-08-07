@@ -28,18 +28,20 @@ trait Game {
    */
   case class GameState(
     board: Board,
-    source: List[GameUnit],
+    sourceIdxs: List[Int],
+    units: List[GameUnit],
     seed: Int,
     width: Int,
     height: Int,
     currentUnit: Option[GameUnit],
     score: Score = Score(0, 0)
   ) {
+    def source: List[GameUnit] = sourceIdxs map units
 
     def hasEnded: Boolean = {
       val ret = currentUnit.isEmpty
       if (ret)
-        assert(source.isEmpty)
+        assert(sourceIdxs.isEmpty)
       ret
     }
 
@@ -127,13 +129,13 @@ trait Game {
             newBoard(newX)(0) = false
         }
       }
-      val newSource =
-        if (source.nonEmpty)
-          source.tail
+      val newSourceIdxs =
+        if (sourceIdxs.nonEmpty)
+          sourceIdxs.tail
         else
           Nil
 
-      GameState(newBoard, newSource, seed, width, height, source.headOption, score(gameUnitToLock, clearedRows))
+      GameState(newBoard, newSourceIdxs, units, seed, width, height, source.headOption, score(gameUnitToLock, clearedRows))
     }
   }
 
@@ -146,14 +148,14 @@ trait Game {
 
       val board = Board.empty(width, height)
 
-      val source: List[GameUnit] =
+      val sourceIdxs: List[Int] =
         List.iterate(RandomSource(seed).next, sourceLength)(_._2.next)
-          .map (s => units(s._1 % units.size))
+          .map (s => s._1 % units.size)
 
       filled.foreach { case Cell(x, y) => board(x)(y) = true }
 
       //Preload the first GameUnit
-      GameState(board, source.tail, seed, width, height, Some(source.head))
+      GameState(board, sourceIdxs.tail, units, seed, width, height, Some(units(sourceIdxs.head)))
     }
   }
 }

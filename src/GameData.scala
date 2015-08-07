@@ -74,6 +74,11 @@ case class GameUnit(members: List[Cell], pivot: Cell) {
     else
       move(d).move(d, n - 1)
 
+  def exec(c: Command): GameUnit = c match {
+    case Turn(_) => ???
+    case Move(dir) => move(dir)
+  }
+
   def size: Int = members.size
 }
 

@@ -38,7 +38,8 @@ trait Game {
 
     def hasEnded: Boolean = {
       val ret = currentUnit.isEmpty
-      assert (ret == source.isEmpty)
+      if (ret)
+        assert(source.isEmpty)
       ret
     }
 
@@ -82,6 +83,20 @@ trait Game {
           None
       }
     }
+
+    implicit class CommandOps(self: Command) {
+      def valid: Boolean = {
+        currentUnit match {
+          case None =>
+            throw new IllegalArgumentException
+          case Some(unit) =>
+            (unit exec self).valid
+        }
+      }
+    }
+
+    def updateCurrentUnit(newGameUnit: Option[GameUnit]) = copy(currentUnit = newGameUnit)
+    def move(cmd: Command) = updateCurrentUnit(Some(currentUnit.get.exec(cmd)))
 
     def lockUnit(): GameState = {
       assert(currentUnit.isDefined)

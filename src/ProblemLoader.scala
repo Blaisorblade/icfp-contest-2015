@@ -17,4 +17,18 @@ object ProblemLoader {
 
   //Now we can do stats. For instance:
   //ProblemLoader.problems.map(_.sourceLength).zipWithIndex.sortBy(_._1)
+
+  def solve(player: Player) = {
+    for {
+      (p, id) <- problems.zipWithIndex
+    } yield player.solve(p, id).toJson
+  }
+
+  //XXX temporary
+  def testSolve =
+    for {
+      (solutionOutput, id) <- ProblemLoader.solve(StupidPlayer).zipWithIndex
+    } {
+      println((solutionOutput, id)) //XXX improve this
+    }
 }

@@ -5,4 +5,3 @@ TEAM_ID=49
 curl --user :$API_TOKEN -X POST -H "Content-Type: application/json" \
         -d @- \
         https://davar.icfpcontest.org/teams/$TEAM_ID/solutions
-        #-d $OUTPUT \

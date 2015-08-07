@@ -21,16 +21,20 @@ trait Game {
     }
   }
 
-  // Represents a single game
+  /**
+   * Represents a single game.
+   *
+   * currentUnit is None at the beginning and when the game has ended. In the latter case
+   */
   case class GameState(
     board: Board,
     source: List[GameUnit],
     width: Int,
     height: Int,
-    score: Score = Score(0, 0)
+    score: Score = Score(0, 0),
+    currentUnit: Option[GameUnit] = None
   ) {
-    //val currentUnit: GameUnit
-
+    def hasEnded = currentUnit.isEmpty && source.isEmpty
     def filled(c: Cell): Boolean = board(c.x)(c.y)
 
     implicit class CellOps(self: Cell) {
@@ -71,9 +75,44 @@ trait Game {
           None
       }
     }
-  }
-  object GameState {
 
+    def lockUnit(g: GameUnit): GameState = {
+      val newBoard = board.clone()
+      for (cell <- g.members) {
+        newBoard(cell.x)(cell.y) = true
+      }
+      var clearedRows = 0
+      for {
+        cell <- g.members
+      } {
+        val y = cell.y
+        val xs = 0 to width - 1
+        val isRowFull = xs forall (x => newBoard(x)(y))
+        if (isRowFull) {
+          clearedRows += 1
+          //Copy downward all rows above the current one
+          for {
+            newY <- y - 1 to (0, -1)
+            newX <- 0 to width - 1
+          } {
+            //Copy the array pointer? No, we store the array in the wrong order for that.
+            newBoard(newX)(newY + 1) = newBoard(newX)(newY)
+          }
+          //Clear first row
+          for (newX <- 0 to width - 1)
+            newBoard(newX)(0) = false
+        }
+      }
+      val newSource =
+        if (source.nonEmpty)
+          source.tail
+        else
+          Nil
+      GameState(newBoard, newSource, width, height, score(currentUnit, clearedRows), source.headOption)
+    }
+  }
+
+  object GameState {
     def allGames(p: Problem): List[GameState] =
       p.sourceSeeds.map(GameState(p))
 

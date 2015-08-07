@@ -35,10 +35,10 @@ class DisplacementTest extends FunSpec with Matchers {
 
   import Game._
 
-  describe("Move/check Cell(1, 1)") {
+  val aGameState = new GameState(Board.empty(10, 10), Nil, 10, 10)
 
-    val g = new GameState(Board.empty(10, 10), Nil, 10, 10)
-    import g._
+  describe("Move/check Cell(1, 1)") {
+    import aGameState._
 
     val c = Cell(0, 0)
     c(NW) shouldBe None
@@ -48,4 +48,21 @@ class DisplacementTest extends FunSpec with Matchers {
     c(E) shouldBe Some(Cell(1, 0))
   }
 
+  val aGameUnit1 = GameUnit(List(Cell(0, 0), Cell(1, 0), Cell(1, 1)), Cell(0, 0))
+  val aGameUnit1b = GameUnit(List(Cell(0, 1), Cell(1, 1), Cell(1, 2)), Cell(0, 0))
+  val aGameUnit2 = GameUnit(List(Cell(0, 0), Cell(2, 0)), Cell(1, 0))
+  val aGameUnit2b = GameUnit(List(Cell(0, 1), Cell(2, 1)), Cell(1, 1))
+
+  describe("Spawn game units") {
+    import aGameState._
+    it("should work") {
+      aGameUnit1.spawn shouldBe Some(GameUnit(List(Cell(4, 0), Cell(5, 0), Cell(5, 1)), Cell(4, 0)))
+      aGameUnit2.spawn shouldBe Some(GameUnit(List(Cell(3, 0), Cell(5, 0)), Cell(4, 0)))
+    }
+
+    ignore("should work even for units not starting on the top row"){
+      aGameUnit1b.spawn shouldBe Some(GameUnit(List(Cell(4, 0), Cell(5, 0), Cell(5, 1)), Cell(4, 0)))
+      aGameUnit2b.spawn shouldBe Some(GameUnit(List(Cell(3, 0), Cell(5, 0)), Cell(4, 0)))
+    }
+  }
 }

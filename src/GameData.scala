@@ -34,7 +34,10 @@ case class Cell(x: Int, y: Int) {
         case SE => (x + corr, y + 1)
       }
   })
-
+  // Checks whether the cell is inside of a given rectangle
+  def inside(upperLeft: Cell, lowerRight: Cell): Boolean =
+    x >= upperLeft.x && y >= upperLeft.y &&
+    x <= lowerRight.x && y <= lowerRight.y
 }
 
 case class GameUnit(

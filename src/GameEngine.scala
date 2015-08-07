@@ -17,7 +17,7 @@ trait Game {
       val lineBonus: Int = if (lastLines > 1) {
         (lastLines - 1) * points / 10
       } else 0
-      Score(points + lineBonus, lines)
+      Score(score + points + lineBonus, lines)
     }
   }
 

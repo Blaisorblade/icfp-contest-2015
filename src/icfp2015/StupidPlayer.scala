@@ -12,7 +12,7 @@ trait Player {
 
 object StupidPlayer extends Player {
   def solve(p: Problem): List[Output] = {
-    GameState.allGames(p) map solveState(p.id, "")
+    GameState.allGames(p) map solveState(p.id, "Try #2")
   }
 
   def solveState(id: Int, tag: String)(g: GameState): Output = {

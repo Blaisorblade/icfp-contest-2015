@@ -67,6 +67,8 @@ case class GameUnit(members: List[Cell], pivot: Cell) {
   def move(d: Direction): GameUnit = GameUnit(
     members map (_ move d),
     pivot move d)
+
+  def size: Int = members.size
 }
 
 

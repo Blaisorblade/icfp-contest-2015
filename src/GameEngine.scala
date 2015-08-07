@@ -5,12 +5,25 @@ trait Game {
   type Filled = Boolean
   type Board = Array[Array[Filled]]
 
+  case class Score(score: Int, lastLines: Int) {
+    // Compute the score for the given game unit and the
+    // number of cleared lines
+    def apply(unit: GameUnit, lines: Int): Score = {
+      val points = unit.size + 100 * (1 + lines) * lines / 2
+      val lineBonus: Int = if (lastLines > 1) {
+        (lastLines - 1) * points / 10
+      } else 0
+      Score(points + lineBonus, lines)
+    }
+  }
+
   // Represents a single game
   class GameState(
     board: Board,
     source: List[GameUnit],
     width: Int,
-    height: Int
+    height: Int,
+    score: Score = Score(0, 0)
   ) {
     //val currentUnit: GameUnit
 

@@ -18,17 +18,15 @@ object ProblemLoader {
   //Now we can do stats. For instance:
   //ProblemLoader.problems.map(_.sourceLength).zipWithIndex.sortBy(_._1)
 
-  def solve(player: Player) = {
-    for {
-      p <- problems
-    } yield player.solve(p).toJson
-  }
+  def solve(player: Player) =
+    problems.flatMap(player.solve)
 
-  //XXX temporary
-  def testSolve =
-    for {
-      (solutionOutput, id) <- ProblemLoader.solve(StupidPlayer).zipWithIndex
-    } {
-      println((solutionOutput, id)) //XXX improve this
-    }
+  def outputJsonSolution =
+    Console.err.println(ProblemLoader.solve(StupidPlayer).toJson)
+}
+
+object Driver {
+  def main(args: Array[String]) {
+    ProblemLoader.outputJsonSolution
+  }
 }

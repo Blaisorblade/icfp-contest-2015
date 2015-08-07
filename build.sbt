@@ -6,3 +6,5 @@ scalaSource in Test := baseDirectory.value / "test-src"
 //Just to stop sbteclipse from creating extra dirs.
 javaSource in Compile := baseDirectory.value / "src"
 javaSource in Test := baseDirectory.value / "test-src"
+
+libraryDependencies += "io.spray" %%  "spray-json" % "1.3.2"

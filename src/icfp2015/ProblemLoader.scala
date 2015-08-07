@@ -18,8 +18,13 @@ object ProblemLoader {
   //Now we can do stats. For instance:
   //ProblemLoader.problems.map(_.sourceLength).zipWithIndex.sortBy(_._1)
 
-  def solve(player: Player) =
-    problems.flatMap(player.solve)
+  def solve(player: Player) = {
+    val (outputs, scores) = problems.map(player.solve).unzip
+    for {
+      (score, i) <- scores.zipWithIndex
+    } println(s"Problem $i: score $score")
+    outputs.flatten
+  }
 
   def outputJsonSolution =
     Console.err.println(ProblemLoader.solve(StupidPlayer).toJson)

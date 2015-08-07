@@ -103,10 +103,10 @@ trait Game {
         newBoard(cell.x)(cell.y) = true
       }
       var clearedRows = 0
+      val rowsToCheck = gameUnitToLock.members.map(_.y).toSet.toList
       for {
-        cell <- gameUnitToLock.members
+        y <- 0 to height - 1//rowsToCheck.sorted
       } {
-        val y = cell.y
         val xs = 0 to width - 1
         val isRowFull = xs forall (x => newBoard(x)(y))
         if (isRowFull) {

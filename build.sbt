@@ -10,3 +10,5 @@ javaSource in Test := baseDirectory.value / "test-src"
 initialCommands in console := "import icfp2015._"
 
 libraryDependencies += "io.spray" %%  "spray-json" % "1.3.2"
+
+libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.4" % "test"

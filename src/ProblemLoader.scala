@@ -20,8 +20,8 @@ object ProblemLoader {
 
   def solve(player: Player) = {
     for {
-      (p, id) <- problems.zipWithIndex
-    } yield player.solve(p, id).toJson
+      p <- problems
+    } yield player.solve(p).toJson
   }
 
   //XXX temporary

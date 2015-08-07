@@ -7,12 +7,12 @@ import Game._
  */
 
 trait Player {
-  def solve(p: Problem, id: Int): List[Output]
+  def solve(p: Problem): List[Output]
 }
 
 object StupidPlayer extends Player {
-  def solve(p: Problem, id: Int): List[Output] = {
-    GameState.allGames(p) map solveState(id, "")
+  def solve(p: Problem): List[Output] = {
+    GameState.allGames(p) map solveState(p.id, "")
   }
 
   def solveState(id: Int, tag: String)(g: GameState): Output = {

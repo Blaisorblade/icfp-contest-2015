@@ -5,6 +5,10 @@ trait Game {
   type Filled = Boolean
   type Board = Array[Array[Filled]]
 
+  object Board {
+    def empty(width: Int, height: Int) = Array.fill[Filled](width, height)(false)
+  }
+
   case class Score(score: Int, lastLines: Int) {
     // Compute the score for the given game unit and the
     // number of cleared lines
@@ -27,10 +31,12 @@ trait Game {
   ) {
     //val currentUnit: GameUnit
 
+    def filled(c: Cell): Boolean = board(c.x)(c.y)
+
     implicit class CellOps(self: Cell) {
 
       def valid: Boolean =
-        self.inside(Cell(0, 0), Cell(width - 1, height - 1))
+        self.inside(Cell(0, 0), Cell(width - 1, height - 1)) && !filled(self)
 
       def apply(d: Direction): Option[Cell] = {
         val c = self.move(d)
@@ -56,7 +62,7 @@ trait Game {
     def apply(p: Problem)(seed: Int): GameState = {
       import p._
 
-      val board = Array.fill[Filled](width, height)(false)
+      val board = Board.empty(width, height)
 
       val source: List[GameUnit] =
         List.iterate(RandomSource(seed).next, sourceLength)(_._2.next)

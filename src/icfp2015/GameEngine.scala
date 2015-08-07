@@ -134,8 +134,9 @@ trait Game {
           sourceIdxs.tail
         else
           Nil
+      val newUnit = source.headOption.flatMap(_.spawn)
 
-      GameState(newBoard, newSourceIdxs, units, seed, width, height, source.headOption, score(gameUnitToLock, clearedRows))
+      GameState(newBoard, newSourceIdxs, units, seed, width, height, newUnit, score(gameUnitToLock, clearedRows))
     }
   }
 

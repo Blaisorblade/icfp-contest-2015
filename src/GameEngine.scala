@@ -22,7 +22,7 @@ trait Game {
   }
 
   // Represents a single game
-  class GameState(
+  case class GameState(
     board: Board,
     source: List[GameUnit],
     width: Int,

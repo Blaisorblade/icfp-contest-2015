@@ -78,13 +78,49 @@ case class GameUnit(members: List[Cell], pivot: Cell) {
 }
 
 
+sealed trait Command
+
+case class Move(dir: Direction) extends Command {
+  assert (dir != NW && dir != NE)
+}
+case class Turn(clockwise: Boolean) extends Command
+
+object Command {
+  /**
+   * Return possible encodings (packed as a string).
+   */
+  def toChars(c: Command): String =
+    c match {
+      case Move(W)     =>
+        "p'!.03"
+      case Move(E)     =>
+        "bcefy2"
+      case Move(SW)    =>
+        "aghij4"
+      case Move(SE)    =>
+        "lmno 5"
+      case Move(_)     =>
+        throw new IllegalArgumentException
+      case Turn(true)  =>
+        "dqrvz1"
+      case Turn(false) =>
+        "kstuwx"
+    }
+  /**
+   * Return
+   */
+  def toChar(c: Command) =
+    toChars(c).charAt(0)
+  def toSolution(commands: Seq[Command]): String = new String(commands.map(toChar).toArray)
+}
+
 // Output Data
 // for now: Command = Char
 case class Output(
   problemId: Int,
   seed: Int,
   tag: String,
-  solution: List[Char])
+  solution: String)
 
 
 object HoneycombProtocol extends DefaultJsonProtocol {

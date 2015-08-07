@@ -2,10 +2,12 @@ scalaVersion := "2.11.7"
 
 scalaSource in Compile := baseDirectory.value / "src"
 scalaSource in Test := baseDirectory.value / "test-src"
+resourceDirectory in Compile := (scalaSource in Compile).value
+resourceDirectory in Test := (scalaSource in Test).value
 
 //Just to stop sbteclipse from creating extra dirs.
-javaSource in Compile := baseDirectory.value / "src"
-javaSource in Test := baseDirectory.value / "test-src"
+javaSource in Compile := (scalaSource in Compile).value
+javaSource in Test := (scalaSource in Test).value
 
 initialCommands in console := "import icfp2015._"
 

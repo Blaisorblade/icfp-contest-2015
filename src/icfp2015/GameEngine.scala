@@ -24,7 +24,7 @@ trait Game {
   /**
    * Represents a single game.
    *
-   * currentUnit is None only when the game has ended; then also source is empty.
+   * currentUnit is None only when the game has ended.
    */
   case class GameState(
     board: Board,
@@ -38,12 +38,7 @@ trait Game {
   ) {
     def source: List[GameUnit] = sourceIdxs map units
 
-    def hasEnded: Boolean = {
-      val ret = currentUnit.isEmpty
-      if (ret)
-        assert(sourceIdxs.isEmpty)
-      ret
-    }
+    def hasEnded: Boolean = currentUnit.isEmpty
 
     def filled(c: Cell): Boolean = board(c.x)(c.y)
 

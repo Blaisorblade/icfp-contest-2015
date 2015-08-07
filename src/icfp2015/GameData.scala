@@ -57,6 +57,14 @@ case class Cell(x: Int, y: Int) {
         case SE => (x + corr, y + 1)
       }
   })
+
+  def getDirectionTo(other: Cell): Direction = other match {
+    case Cell(ox, oy) if oy == y     && ox == (x + 1)           => W
+    case Cell(ox, oy) if oy == y     && ox == (x - 1)           => E
+    case Cell(ox, oy) if oy == y + 1 && ox == (x - (y % 2))     => SW
+    case Cell(ox, oy) if oy == y + 1 && ox == (x - (y % 2) + 1) => SE
+  }
+
   // Checks whether the cell is inside of a given rectangle
   def inside(upperLeft: Cell, lowerRight: Cell): Boolean =
     x >= upperLeft.x && y >= upperLeft.y &&

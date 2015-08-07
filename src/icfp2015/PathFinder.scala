@@ -21,7 +21,7 @@ trait PathFinder { self: Game =>
 
     val (qwidth, qheight) = fromHex(game.width, game.height)
 
-    def pathTo(target: Cell): List[Command] = {
+    def pathTo(target: Cell): Option[List[Command]] = {
 
       val (qtargetx, qtargety) = fromHex(target.x, target.y)
 
@@ -41,16 +41,21 @@ trait PathFinder { self: Game =>
       val area = new AreaMap[GameUnit](g)
       val astar = new AStar(area, start, new DiagonalHeuristic)
 
-      val cellPath: List[Cell] = astar.calcShortestPath.toList map {
+      val res = astar.calcShortestPath
+
+      if (res == null) return None
+
+      val cellPath: List[Cell] = res.toList map {
         p => Cell.tupled(toHex(p.x, p.y))
       }
 
       // only works if start != target
-      val directions = (cellPath :+ target).foldLeft[(Cell, List[Direction])]((start.pivot, Nil)) {
-        case ((curr, dirs), nxt) => (nxt, dirs :+ (curr directionTo nxt))
-      }
+      val directions = (cellPath :+ target)
+        .foldLeft[(Cell, List[Direction])]((start.pivot, Nil)) {
+          case ((curr, dirs), nxt) => (nxt, dirs :+ (curr directionTo nxt))
+        }
 
-      directions._2 map Move
+      Some(directions._2 map Move)
     }
   }
 

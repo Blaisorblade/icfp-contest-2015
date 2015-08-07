@@ -43,7 +43,13 @@ class AStarTest extends FunSpec with Matchers {
   val area = new AreaMap[GameUnit](game)
   val astar = new AStar(area, dummyUnit, new DiagonalHeuristic)
 
-  println(astar.calcShortestPath.toList map {
-    p => toHex(p.x, p.y)
-  })
+  val res = astar.calcShortestPath
+
+  if (res == null)
+    println("Sorry, could'nt find a path")
+
+  else
+    println(res.toList map {
+      p => toHex(p.x, p.y)
+    })
 }

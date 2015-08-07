@@ -74,6 +74,16 @@ case class GameUnit(members: List[Cell], pivot: Cell) {
     else
       move(d).move(d, n - 1)
 
+  // Moves a game unit relative to the pivot.
+  // After moving GameUnit'.pivot = to
+  def move(to: Cell): GameUnit = {
+    val dx = to.x - pivot.x
+    val dy = to.y - pivot.y
+    GameUnit(members map { case Cell(x, y) =>
+      Cell(x + dx, y + dy)
+    }, to)
+  }
+
   def exec(c: Command): GameUnit = c match {
     case Turn(_) => ???
     case Move(dir) => move(dir)

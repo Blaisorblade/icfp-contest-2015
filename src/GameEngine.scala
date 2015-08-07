@@ -76,14 +76,16 @@ trait Game {
       }
     }
 
-    def lockUnit(g: GameUnit): GameState = {
+    def lockUnit(): GameState = {
+      assert(currentUnit.isDefined)
+      val gameUnitToLock = currentUnit.get
       val newBoard = board.clone()
-      for (cell <- g.members) {
+      for (cell <- gameUnitToLock.members) {
         newBoard(cell.x)(cell.y) = true
       }
       var clearedRows = 0
       for {
-        cell <- g.members
+        cell <- gameUnitToLock.members
       } {
         val y = cell.y
         val xs = 0 to width - 1
@@ -108,7 +110,7 @@ trait Game {
           source.tail
         else
           Nil
-      GameState(newBoard, newSource, width, height, score(currentUnit, clearedRows), source.headOption)
+      GameState(newBoard, newSource, width, height, score(gameUnitToLock, clearedRows), source.headOption)
     }
   }
 

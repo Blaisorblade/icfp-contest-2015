@@ -29,6 +29,7 @@ trait Game {
   case class GameState(
     board: Board,
     source: List[GameUnit],
+    seed: Int,
     width: Int,
     height: Int,
     currentUnit: Option[GameUnit],
@@ -117,7 +118,7 @@ trait Game {
         else
           Nil
 
-      GameState(newBoard, newSource, width, height, source.headOption, score(gameUnitToLock, clearedRows))
+      GameState(newBoard, newSource, seed, width, height, source.headOption, score(gameUnitToLock, clearedRows))
     }
   }
 
@@ -137,7 +138,7 @@ trait Game {
       filled.foreach { case Cell(x, y) => board(x)(y) = true }
 
       //Preload the first GameUnit
-      GameState(board, source.tail, width, height, Some(source.head))
+      GameState(board, source.tail, seed, width, height, Some(source.head))
     }
   }
 }

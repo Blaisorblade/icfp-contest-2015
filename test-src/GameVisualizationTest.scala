@@ -15,7 +15,7 @@ class GameVisualizationTest extends FunSpec with Matchers {
   board(1)(14) = true
   board(4)(14) = true
 
-  val state = GameState(board, Nil, 5, 15, currentUnit = Some(GameUnit(List(
+  val state = GameState(board, Nil, -1, 5, 15, currentUnit = Some(GameUnit(List(
   	Cell(2, 3), Cell(2, 4), Cell(3, 3)
   ), Cell(2, 3))))
 

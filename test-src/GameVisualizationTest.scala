@@ -15,9 +15,9 @@ class GameVisualizationTest extends FunSpec with Matchers {
   board(1)(14) = true
   board(4)(14) = true
 
-  val dummyGameUnit = GameUnit(Nil, Cell(0, 0))
-
-  val state = GameState(board, Nil, 5, 15, Some(dummyGameUnit))
+  val state = GameState(board, Nil, 5, 15, currentUnit = Some(GameUnit(List(
+  	Cell(2, 3), Cell(2, 4), Cell(3, 3)
+  ), Cell(2, 3))))
 
   renderToFile(state, "test.html")
 

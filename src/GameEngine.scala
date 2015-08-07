@@ -116,6 +116,7 @@ trait Game {
           source.tail
         else
           Nil
+
       GameState(newBoard, newSource, width, height, source.headOption, score(gameUnitToLock, clearedRows))
     }
   }

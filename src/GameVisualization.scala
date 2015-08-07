@@ -10,12 +10,20 @@ trait GameVisualization { self: Game =>
     def cells(y: Int): Seq[scala.xml.Node] = for {
       x <- 0 until width
     } yield {
-      println(x)
-      if (filled(Cell(x, y))) {
-        <div class="cell filled"></div>
-      } else {
-        <div class="cell"></div>
+      val c = Cell(x, y)
+
+      var classes = "cell" :: Nil
+
+      if (filled(c)) classes = classes :+ "filled"
+
+      currentUnit.map {
+        case GameUnit(cs, pivot) =>
+          if (cs contains c) classes = classes :+ "unit"
+          if (pivot == c) classes = classes :+ "pivot"
       }
+
+      <div class={classes mkString " "}></div>
+
     }
 
     // TODO render current unit

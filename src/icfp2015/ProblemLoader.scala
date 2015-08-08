@@ -34,7 +34,7 @@ object ProblemLoader {
   }
 
   def outputJsonSolution =
-    Console.err.println(ProblemLoader.solve(SimplePlayer).toJson)
+    Console.err.println(ProblemLoader.solve(StupidPlayer).toJson)
 }
 
 case class Config(fileNames: List[String] = Nil, timeLimit: Int = -1, memoryLimit: Int = -1, cores: Int = -1, phrases: List[String] = Nil)

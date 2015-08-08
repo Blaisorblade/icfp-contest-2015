@@ -13,12 +13,6 @@ case class PathFinder(game: GameState) {
   val start = currentUnit.get
   val (qstartx, qstarty) = fromHex(start.pivot.x, start.pivot.y)
 
-  def fromHex(x: Int, y: Int): (Int, Int) =
-    (x + (y + 1) / 2, y)
-
-  def toHex(x: Int, y: Int): (Int, Int) =
-    (x - (y + 1) / 2, y)
-
   val (qwidth, qheight) = fromHex(game.width, game.height)
 
   def pathTo(target: Cell): Option[List[Command]] = {

@@ -86,14 +86,16 @@ case class GameUnit(members: List[Cell], pivot: Cell) {
     else
       move(d).move(d, n - 1)
 
-  // Moves a game unit relative to the pivot.
-  // After moving GameUnit'.pivot = to
   def move(to: Cell): GameUnit = {
-    val dy = to.y - pivot.y
-    val dx = to.x - pivot.x
+    val (qxp, qyp) = fromHex(pivot.x, pivot.y)
+    val (qxt, qyt) = fromHex(to.x, to.y)
+
+    val dqx = qxt - qxp
+    val dqy = qyt - qyp
 
     GameUnit(members map { case Cell(x, y) =>
-      Cell(x + dx + ((dy % 2) * (y % 2)), y + dy)
+      val (qx, qy) = fromHex(x, y)
+      Cell.tupled(toHex(qx + dqx, qy + dqy))
     }, to)
   }
 

@@ -70,7 +70,7 @@ object SimplePlayer extends Player {
     val commandOptions = commandsProposals.head
     val (newGameState, next, doStop) = commandOptions.filter(_.valid).headOption match {
       case None =>
-        (gameState.lockUnit(), (commandOptions :+ Move(SW)).head, true)
+        (gameState.lockUnit(), Move(SW), true)
       case Some(next) =>
         (gameState.move(next), next, false)
     }

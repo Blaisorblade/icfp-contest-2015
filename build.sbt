@@ -18,4 +18,4 @@ libraryDependencies += "com.github.scopt" %% "scopt" % "3.3.0"
 libraryDependencies ++= Seq("org.scala-lang" % "scala-reflect" % "2.11.7", "org.scala-lang.modules" %% "scala-xml" % "1.0.4")
 
 //Avoid Eclipse overwriting SBT output.
-EclipseKeys.eclipseOutput in ThisBuild := Some("bin")
+//EclipseKeys.eclipseOutput in ThisBuild := Some("bin")

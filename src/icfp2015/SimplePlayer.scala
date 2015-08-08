@@ -31,7 +31,10 @@ object SimplePlayer extends Player {
     (Output(id, g.seed, tag, solution), score)
   }
 
+  var i = 0;
   def go(gameState: GameState, commandsAcc: List[Command], verbose: Boolean, frame: Int): (List[Command], Score) = {
+    i += 1
+
     import gameState._
     assert(!hasEnded)
     assert(currentUnit.isDefined)
@@ -57,7 +60,9 @@ object SimplePlayer extends Player {
       println(s"Frame $frame: commands '$newCommands'")
       renderToFile(newGameState, s"test$frame.html")
     }
+
     if (newGameState.hasEnded) {
+      //renderToFile(newgame, s"test${i}.html")
       println(newGameState.score)
       (newCommands, newGameState.score)
     } else {

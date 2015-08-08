@@ -1,18 +1,40 @@
-#board {
-  display: block;
-  padding-top: 6px;
+.game {
+  position: relative;
 }
 
-#board .row {
+.game .controls {
+  position: absolute;
+  z-index: 100;
+}
+
+.game .controls button {
+  line-height: 2em;
+  width: 4em;
+}
+
+.frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border: 1px solid #efefef;
+  z-index: 50;
+}
+
+.board {
+  display: block;
+  padding-top: 40px;
+}
+
+.board .row {
   display: block;
   width: 100%;
   margin-top: -6px;
 }
-#board .row:nth-child(even) {
+.board .row:nth-child(even) {
   margin-left: 28px;
 }
 
-#board .cell {
+.board .cell {
   display: inline-block;
   position: relative;
   width: 56px;
@@ -20,19 +42,19 @@
   background: url(sand.png) center -6px no-repeat;
 }
 
-#board .cell.filled {
+.board .cell.filled {
   background: url(orange.png) center -6px no-repeat;
 }
 
-#board .cell.unit {
+.board .cell.unit {
   background: url(green.png) center -6px no-repeat;
 }
 
-#board .cell.unit {
+.board .cell.unit {
   background: url(green.png) center -6px no-repeat;
 }
 
-#board .cell.pivot::before {
+.board .cell.pivot::before {
   content: '';
   display: block;
   position: absolute;

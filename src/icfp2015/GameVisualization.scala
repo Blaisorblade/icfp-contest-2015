@@ -4,6 +4,8 @@ import java.io._
 
 object GameVisualization {
 
+  private var fh: PrintWriter = null
+
   def render(g: GameState) = {
     import g._
 
@@ -32,18 +34,55 @@ object GameVisualization {
     } yield <div class="row">{cells(y)}</div>
 
     // maybe use stylesheet on server to ignore resources copying.
-    val board =
+
+    <div class="board">{rows}</div>
+  }
+
+  class Visualizer {
+    def problem[T](p: Problem)(block: => T): T = {
+      fh = new PrintWriter(debugFile(p.id.toString))
+      fh write """<!DOCTYPE html>
       <html>
+        <script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+        <script src="resources/app.js"></script>
         <head>
           <link rel="stylesheet" href="resources/styles.css"/>
         </head>
-        <body>
-          <div id="board">{rows}</div>
-        </body>
-      </html>
+        <body>"""
 
-    board
+      val res = block
+      fh write """</body></html>"""
+      fh.close()
+      res
+    }
+    // should internally increment a counter
+    def game[T](g: GameState)(block: => T): T = {
+      fh write """<div class="game" data-curr=0>
+        <nav class="controls">
+          <button class="start">&lt;&lt;-</button>
+          <button class="prev">&lt;</button>
+          <button class="next">&gt;</button>
+          <button class="end">-&gt;&gt;</button>
+        </nav> """
+      val res = block
+      fh write """</div>"""
+      res
+    }
+    def lock(g: GameState)(cmd: Command) = {
+      fh write """<div class="frame">"""
+      fh write render(g).toString
+      fh write s"""<span class="cmd">LOCK ($cmd)</span>"""
+      fh write """</div>"""
+    }
+    def step(g: GameState, cmd: Command) = {
+      fh write """<div class="frame">"""
+      fh write render(g).toString
+      fh write s"""<span class="cmd">${cmd}</span>"""
+      fh write """</div>"""
+    }
   }
+
+  private def debugFile(name: String) = new File(s"debug_${name}.html")
 
   def renderToFile(g: GameState, filePath: String) = {
     val writer = new PrintWriter(new File(filePath))

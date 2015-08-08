@@ -23,17 +23,17 @@ object StupidPlayer extends Player {
     //Evaluate solutions
     //Choose the best.
     assert(!g.hasEnded)
-    val (commands, score) = go(g, Nil)
+    val (commands, score) = go(g, Nil, Stream.iterate(List(SW, SE) map Move)(identity))
     val solution = Command.toSolution(commands)
     (Output(id, g.seed, tag, solution), score)
   }
 
-  def go(gameState: GameState, commands: List[Command]): (List[Command], Score) = {
+  def go(gameState: GameState, commandsAcc: List[Command], commandsProposals: Seq[Seq[Command]]): (List[Command], Score) = {
     import gameState._
     assert(!hasEnded)
     assert(currentUnit.isDefined)
     //Pick command
-    val commandOptions = List(SW, SE) map Move
+    val commandOptions = commandsProposals.head
     //Check if if legal.
     //If all are illegal, we pick an arbitrary one (the first) to lock the piece
     val (newGameState, next) = commandOptions.filter(_.valid).headOption match {
@@ -42,10 +42,12 @@ object StupidPlayer extends Player {
       case Some(next) =>
         (gameState.move(next), next)
     }
-    val newCommands = commands :+ next
-    if (newGameState.hasEnded)
+    val newCommands = commandsAcc :+ next
+    if (newGameState.hasEnded) {
+      println(newGameState.score)
       (newCommands, gameState.score)
+    }
     else
-      go(newGameState, newCommands)
+      go(newGameState, newCommands, commandsProposals.tail)
   }
 }

@@ -30,8 +30,6 @@ object SimplePlayer extends Player {
 
 
     //Pick command
-    val commandOptions = List(SW, SE) map Move
-
     val pf = PathFinder(gameState)
 
     // order possible pivot-slots by priority

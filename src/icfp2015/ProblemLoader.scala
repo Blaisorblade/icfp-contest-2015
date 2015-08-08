@@ -16,7 +16,7 @@ object ProblemLoader {
       Driver.globalConfig.fileNames
     else
       for {
-        i <- 0 to 23
+        i <- 0 to 24
       } yield s"problems/problem_$i.json"
   val problems = inputFiles.map(load(_).parseJson.convertTo[Problem])
 

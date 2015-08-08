@@ -71,7 +71,7 @@ object GameVisualization {
     def step(g: GameState, cmd: Command, lock: Boolean) = {
       fh write """<div class="frame">"""
       fh write render(g).toString
-      fh write s"""<span class="cmd">${if (lock) "LOCK " else ""}${cmd}</span>"""
+      fh write s"""<span class="cmd">Next command: ${if (lock) "LOCK " else ""}${cmd}. Score: ${g.score.score}</span>"""
       fh write """</div>"""
     }
   }

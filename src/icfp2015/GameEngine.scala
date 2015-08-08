@@ -95,6 +95,8 @@ trait Game {
     def updateCurrentUnit(newGameUnit: Option[GameUnit]) = copy(currentUnit = newGameUnit)
     def move(cmd: Command) = updateCurrentUnit(Some(currentUnit.get.exec(cmd)))
 
+    def move(to: Cell) = updateCurrentUnit(Some(currentUnit.get.move(to)))
+
     def lockUnit(): GameState = {
       assert(currentUnit.isDefined)
       val gameUnitToLock = currentUnit.get

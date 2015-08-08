@@ -33,7 +33,7 @@ object ProblemLoader {
   }
 
   def outputJsonSolution =
-    Console.err.println(ProblemLoader.solve(StupidPlayer).toJson)
+    Console.err.println(ProblemLoader.solve(SimplePlayer).toJson)
 }
 
 object Driver {

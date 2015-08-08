@@ -8,11 +8,18 @@ trait Player {
   def solve(p: Problem): (List[Output], Int)
 }
 
+import GameVisualization._
+
 object StupidPlayer extends Player {
   val time = new java.util.Date
 
-  def solve(p: Problem): (List[Output], Int) = {
-    val (outputs, scores) = (GameState.allGames(p) map solveState(p.id, s"Stupid ($time)")).unzip
+  val viz = new Visualizer
+
+  def solve(p: Problem): (List[Output], Int) = viz.problem(p) {
+    val (outputs, scores) = (GameState.allGames(p).map { game =>
+      viz.game(game) { solveState(p.id, s"Stupid ($time)")(game) }
+    }).unzip
+
     val problemScore = scores.map(_.score).sum / scores.length
     (outputs, problemScore)
   }
@@ -34,18 +41,21 @@ object StupidPlayer extends Player {
     assert(currentUnit.isDefined)
     //Pick command
     val commandOptions = commandsProposals.head
-    //Check if if legal.
+
+    //Check if legal.
     //If all are illegal, we pick an arbitrary one (the first) to lock the piece
-    val (newGameState, next) = commandOptions.filter(_.valid).headOption match {
+    val (next, valid) = commandOptions.filter(_.valid).headOption match {
       case None =>
-        (gameState.lockUnit(), (commandOptions :+ Move(SW)).head)
+        ((commandOptions :+ Move(SW)).head, false)
       case Some(next) =>
-        (gameState.move(next), next)
+        (next, true)
     }
+    viz.step(gameState, next, lock = !valid)
+    val newGameState = gameState.move(next, valid)
     val newCommands = commandsAcc :+ next
+
     if (newGameState.hasEnded) {
-      println(newGameState.score)
-      (newCommands, gameState.score)
+      (newCommands, newGameState.score)
     } else {
       go(newGameState, newCommands, commandsProposals.tail)
     }

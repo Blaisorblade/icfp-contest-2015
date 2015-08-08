@@ -47,8 +47,10 @@ case class QCell(x: Int, y: Int) {
   def +(other: QCell) = QCell(x + other.x, y + other.y)
   def -(other: QCell) = QCell(x - other.x, y - other.y)
   //Rotate clockwise around the origin.
-  def rotate60 = ???
-    //QCell(-y, x)
+  def rotate60CW = QCell(x - y, x)
+  def rotate60CCW = QCell(y, y - x)
+  def rotate(clockwise: Boolean): QCell =
+    if (clockwise) rotate60CW else rotate60CCW
 
   def toCell: Cell = Cell.tupled(toHex(x, y))
 }
@@ -113,15 +115,23 @@ case class GameUnit(members: List[Cell], pivot: Cell) {
 
     GameUnit(members map (c => (QCellUtil.fromCell(c) + deltaQ).toCell), to)
   }
+  def rotate(clockwise: Boolean): GameUnit = {
+    val qPivot = QCellUtil.fromCell(pivot)
+    val newMembers = members.map(member => (qPivot + (QCellUtil.fromCell(member) - qPivot).rotate(clockwise)).toCell)
+    GameUnit(newMembers, pivot)
+  }
 
   def exec(c: Command): GameUnit = c match {
-    case Turn(_) => ???
+    case Turn(clockwise) => rotate(clockwise)
     case Move(dir) => move(dir)
   }
 
   def size: Int = members.size
+
+  def canonicalized = CanonicalGameUnit(members.toSet, pivot)
 }
 
+case class CanonicalGameUnit(members: Set[Cell], pivot: Cell)
 
 sealed trait Command
 

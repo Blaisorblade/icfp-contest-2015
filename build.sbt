@@ -2,8 +2,8 @@ scalaVersion := "2.11.7"
 
 scalaSource in Compile := baseDirectory.value / "src"
 scalaSource in Test := baseDirectory.value / "test-src"
-resourceDirectory in Compile := (scalaSource in Compile).value
-resourceDirectory in Test := (scalaSource in Test).value
+resourceDirectory in Compile := baseDirectory.value / "resources"
+resourceDirectory in Test := baseDirectory.value / "resources"
 
 //Just to stop sbteclipse from creating extra dirs.
 javaSource in Compile := (scalaSource in Compile).value
@@ -18,4 +18,4 @@ libraryDependencies += "com.github.scopt" %% "scopt" % "3.3.0"
 libraryDependencies ++= Seq("org.scala-lang" % "scala-reflect" % "2.11.7", "org.scala-lang.modules" %% "scala-xml" % "1.0.4")
 
 //Avoid Eclipse overwriting SBT output.
-EclipseKeys.eclipseOutput in ThisBuild := Some("bin")
+//EclipseKeys.eclipseOutput in ThisBuild := Some("bin")

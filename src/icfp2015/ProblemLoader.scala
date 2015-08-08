@@ -23,6 +23,12 @@ object ProblemLoader {
   //Now we can do stats. For instance:
   //ProblemLoader.problems.map(_.sourceLength).zipWithIndex.sortBy(_._1)
 
+  val sol = "iiiiiiimimiiiiiimmimiiiimimimmimimimimmeemmimimiimmmmimmimiimimimmimmimeeemmmimimmimeeemiimiimimimiiiipimiimimmmmeemimeemimimimmmmemimmimmmiiimmmiiipiimiiippiimmmeemimiipimmimmipppimmimeemeemimiieemimmmm"
+  val solProb = 6
+  val solSeed = 0
+  val loadSolution = Output(6, 0, "", sol)
+  //TODO: visualize and compare that solution with the official video.
+
   def solve(player: Player) = {
     val (outputs, scores) = (for {
       prob <- problems

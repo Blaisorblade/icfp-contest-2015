@@ -144,29 +144,35 @@ object Command {
   /**
    * Return possible encodings (packed as a string).
    */
+  val toCharsMap = Map[Command, String](
+      Move(W)     -> "p'!.03",
+      Move(E)     -> "bcefy2",
+      Move(SW)    -> "aghij4",
+      Move(SE)    -> "lmno 5",
+      Turn(true)  -> "dqrvz1",
+      Turn(false) -> "kstuwx"
+    )
+
   def toChars(c: Command): String =
     c match {
-      case Move(W)     =>
-        "p'!.03"
-      case Move(E)     =>
-        "bcefy2"
-      case Move(SW)    =>
-        "aghij4"
-      case Move(SE)    =>
-        "lmno 5"
-      case Move(_)     =>
+      case Move(_) =>
         throw new IllegalArgumentException
-      case Turn(true)  =>
-        "dqrvz1"
-      case Turn(false) =>
-        "kstuwx"
+      case _ => toCharsMap(c)
     }
+
+  val fromChar =
+    (for {
+      (cmd, chars) <- toCharsMap
+      c <- chars
+    } yield (c, cmd)).toMap
+
   /**
    * Return
    */
   def toChar(c: Command) =
     toChars(c).charAt(0)
   def toSolution(commands: Seq[Command]): String = new String(commands.map(toChar).toArray)
+  def fromSolution(cmdString: String): Seq[Command] = cmdString.map(fromChar)
 }
 
 // Output Data

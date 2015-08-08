@@ -127,8 +127,11 @@ case class GameUnit(members: List[Cell], pivot: Cell) {
   }
 
   def size: Int = members.size
+
+  def canonicalized = CanonicalGameUnit(members.toSet, pivot)
 }
 
+case class CanonicalGameUnit(members: Set[Cell], pivot: Cell)
 
 sealed trait Command
 

@@ -45,6 +45,9 @@ case class PathFinder(game: GameState) {
 
     if (res == null) return None
 
+    // We are there...
+    if (start.pivot == target) return Some(Nil)
+
     val cellPath: List[Cell] = res.toList map {
       p => Cell.tupled(toHex(p.x, p.y))
     }

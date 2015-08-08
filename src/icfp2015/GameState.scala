@@ -86,10 +86,16 @@ case class GameState(
   def updateCurrentUnit(newGameUnit: Option[GameUnit]) = copy(currentUnit = newGameUnit)
   def move(cmd: Command, expectedValid: Boolean): GameState = {
     assert(cmd.valid == expectedValid)
-    if (cmd.valid)
-      updateCurrentUnit(Some(currentUnit.get.exec(cmd)))
-    else
-      lockUnit()
+    val newState =
+      if (!hasEnded) {
+        if (cmd.valid)
+          updateCurrentUnit(Some(currentUnit.get.exec(cmd)))
+        else
+          lockUnit()
+      } else {
+        copy(score = Score(0, 0))
+      }
+    newState
   }
 
   def lockUnit(): GameState = {

@@ -49,6 +49,8 @@ case class QCell(x: Int, y: Int) {
   //Rotate clockwise around the origin.
   def rotate60CW = QCell(x - y, x)
   def rotate60CCW = QCell(y, y - x)
+  def rotate(clockwise: Boolean): QCell =
+    if (clockwise) rotate60CW else rotate60CCW
 
   def toCell: Cell = Cell.tupled(toHex(x, y))
 }
@@ -113,9 +115,14 @@ case class GameUnit(members: List[Cell], pivot: Cell) {
 
     GameUnit(members map (c => (QCellUtil.fromCell(c) + deltaQ).toCell), to)
   }
+  def rotate(clockwise: Boolean): GameUnit = {
+    val qPivot = QCellUtil.fromCell(pivot)
+    val newMembers = members.map(member => (qPivot + (QCellUtil.fromCell(member) - qPivot).rotate(clockwise)).toCell)
+    GameUnit(newMembers, pivot)
+  }
 
   def exec(c: Command): GameUnit = c match {
-    case Turn(_) => ???
+    case Turn(clockwise) => rotate(clockwise)
     case Move(dir) => move(dir)
   }
 

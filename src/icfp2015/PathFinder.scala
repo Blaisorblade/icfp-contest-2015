@@ -19,8 +19,8 @@ case class PathFinder(game: GameState) {
     val (qtargetx, qtargety) = fromHex(target.x, target.y)
 
     val g = new GameInterface[GameUnit] {
-      def width = qwidth
-      def height = qheight
+      def width = qwidth + 1
+      def height = qheight + 1
       def canPlaceAt(el: GameUnit, qx: Int, qy: Int) = {
         val (x, y) = toHex(qx, qy)
         el.move(Cell(x, y)).valid

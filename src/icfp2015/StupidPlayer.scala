@@ -34,15 +34,18 @@ object StupidPlayer extends Player {
     assert(currentUnit.isDefined)
     //Pick command
     val commandOptions = commandsProposals.head
-    //Check if if legal.
+
+    //Check if legal.
     //If all are illegal, we pick an arbitrary one (the first) to lock the piece
-    val (newGameState, next) = commandOptions.filter(_.valid).headOption match {
+    val (next, valid) = commandOptions.filter(_.valid).headOption match {
       case None =>
-        (gameState.lockUnit(), (commandOptions :+ Move(SW)).head)
+        ((commandOptions :+ Move(SW)).head, false)
       case Some(next) =>
-        (gameState.move(next), next)
+        (next, true)
     }
+    val newGameState = gameState.move(next, valid)
     val newCommands = commandsAcc :+ next
+
     if (newGameState.hasEnded) {
       println(newGameState.score)
       (newCommands, gameState.score)

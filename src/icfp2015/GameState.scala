@@ -84,9 +84,13 @@ case class GameState(
   }
 
   def updateCurrentUnit(newGameUnit: Option[GameUnit]) = copy(currentUnit = newGameUnit)
-  def move(cmd: Command) = updateCurrentUnit(Some(currentUnit.get.exec(cmd)))
-
-  def move(to: Cell) = updateCurrentUnit(Some(currentUnit.get.move(to)))
+  def move(cmd: Command, expectedValid: Boolean): GameState = {
+    assert(cmd.valid == expectedValid)
+    if (cmd.valid)
+      updateCurrentUnit(Some(currentUnit.get.exec(cmd)))
+    else
+      lockUnit()
+  }
 
   def lockUnit(): GameState = {
     assert(currentUnit.isDefined)

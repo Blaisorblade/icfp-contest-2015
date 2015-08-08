@@ -67,15 +67,19 @@ object SimplePlayer extends Player {
 
   def nestedGo(gameState: GameState, commandsAcc: List[Command], commandsProposals: Seq[Seq[Command]]): (GameState, List[Command]) = {
     import gameState._
+    assert(!hasEnded)
+    assert(currentUnit.isDefined)
     val commandOptions = commandsProposals.head
-    val (newGameState, next, doStop) = commandOptions.filter(_.valid).headOption match {
+    val (next, valid) = commandOptions.filter(_.valid).headOption match {
       case None =>
-        (gameState.lockUnit(), Move(SW), true)
+        (Move(SW), false)
       case Some(next) =>
-        (gameState.move(next), next, false)
+        (next, true)
     }
+    val newGameState = gameState.move(next, valid)
     val newCommands = commandsAcc :+ next
-    if (newGameState.hasEnded || doStop) {
+
+    if (newGameState.hasEnded || !valid) {
       (newGameState, newCommands)
     } else
       nestedGo(newGameState, newCommands, commandsProposals.tail)

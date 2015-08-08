@@ -167,4 +167,4 @@ trait Game {
     }
   }
 }
-object Game extends Game
+object Game extends Game with GameVisualization

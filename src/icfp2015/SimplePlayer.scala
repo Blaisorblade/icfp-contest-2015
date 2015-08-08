@@ -58,7 +58,6 @@ object SimplePlayer extends Player {
       renderToFile(newGameState, s"test$frame.html")
     }
     if (newGameState.hasEnded) {
-      println(newGameState.score)
       (newCommands, newGameState.score)
     } else {
       go(newGameState, newCommands, verbose, frame + 1)

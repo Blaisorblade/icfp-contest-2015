@@ -47,7 +47,6 @@ object StupidPlayer extends Player {
     val newCommands = commandsAcc :+ next
 
     if (newGameState.hasEnded) {
-      println(newGameState.score)
       (newCommands, newGameState.score)
     } else {
       go(newGameState, newCommands, commandsProposals.tail)

@@ -24,16 +24,12 @@ object ProblemLoader {
   //ProblemLoader.problems.map(_.sourceLength).zipWithIndex.sortBy(_._1)
 
   def solve(player: Player) = {
-
     val (outputs, scores) = (for {
       prob <- problems
       sol = player.solve(prob)
       _ = println(s"Problem ${prob.id}: score ${sol._2}")
     } yield sol).unzip
 
-    for {
-      (score, i) <- scores.zipWithIndex
-    } println(s"Problem $i: score $score")
     outputs.flatten
   }
 

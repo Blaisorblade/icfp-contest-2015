@@ -11,9 +11,14 @@ object ProblemLoader {
   import HoneycombProtocol._
   import spray.json._
 
-  val problems = for {
-    i <- 0 to 23
-  } yield load(s"problems/problem_$i.json").parseJson.convertTo[Problem]
+  val inputFiles =
+    if (Driver.globalConfig.fileNames.nonEmpty)
+      Driver.globalConfig.fileNames
+    else
+      for {
+        i <- 0 to 23
+      } yield s"problems/problem_$i.json"
+  val problems = inputFiles.map(load(_).parseJson.convertTo[Problem])
 
   //Now we can do stats. For instance:
   //ProblemLoader.problems.map(_.sourceLength).zipWithIndex.sortBy(_._1)
@@ -36,8 +41,35 @@ object ProblemLoader {
     Console.err.println(ProblemLoader.solve(SimplePlayer).toJson)
 }
 
+case class Config(fileNames: List[String] = Nil, timeLimit: Int = -1, memoryLimit: Int = -1, cores: Int = -1, phrases: List[String] = Nil)
 object Driver {
+  var globalConfig = Config()
+
   def main(args: Array[String]) {
-    ProblemLoader.outputJsonSolution
+    import scopt._
+    val parser = new OptionParser[Unit]("scopt") {
+      head("icfpc")
+      opt[String]('f', "filename") foreach { x =>
+        globalConfig = globalConfig.copy(fileNames = globalConfig.fileNames :+ x)
+      } text ("File containing JSON encoded input (can be given multiple times)")
+      opt[Int]('t', "timeLimit") foreach { x =>
+        globalConfig = globalConfig.copy(timeLimit = x)
+      } text ("Time limit, in seconds, to produce output")
+      opt[Int]('m', "memoryLimit") foreach { x =>
+        globalConfig = globalConfig.copy(memoryLimit = x)
+      } text ("Memory limit, in megabytes, to produce output")
+      opt[Int]('c', "cores") foreach { x =>
+        globalConfig = globalConfig.copy(cores = x)
+      } text ("Number of processor cores available")
+      opt[String]('p', "phraseOfPower") foreach { x =>
+        globalConfig = globalConfig.copy(phrases = globalConfig.phrases :+ x)
+      } text ("Phrase of power (can be given multiple times)")
+      help("help") text ("prints this usage text")
+    }
+    if (parser.parse(args)) {
+      ProblemLoader.outputJsonSolution
+    } else {
+      // arguments are bad, usage message will have been displayed
+    }
   }
 }

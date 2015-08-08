@@ -12,18 +12,26 @@ object SimplePlayer extends Player {
     (outputs, problemScore)
   }
 
+  //For debug
+  val focusedProbId = None
+  val dumpedFrames = 10
+
   def solveState(id: Int, tag: String)(g: GameState): (Output, Score) = {
     //Generate possible next moves
     //val possibleMoves: List[Direction]
     //Evaluate solutions
     //Choose the best.
     assert(!g.hasEnded)
-    val (commands, score) = go(g, Nil)
+    val verbose = Some(id) == focusedProbId
+    if (verbose)
+      renderToFile(g, "test.html")
+
+    val (commands, score) = go(g, Nil, verbose, frame = 0)
     val solution = Command.toSolution(commands)
     (Output(id, g.seed, tag, solution), score)
   }
 
-  def go(gameState: GameState, commandsAcc: List[Command]): (List[Command], Score) = {
+  def go(gameState: GameState, commandsAcc: List[Command], verbose: Boolean, frame: Int): (List[Command], Score) = {
     import gameState._
     assert(!hasEnded)
     assert(currentUnit.isDefined)
@@ -45,11 +53,15 @@ object SimplePlayer extends Player {
     })
 
     val (newGameState, newCommands) = nestedGo(gameState, commandsAcc, commandsProposals)
+    if (verbose && frame < dumpedFrames) {
+      println(s"Frame $frame: commands '$newCommands'")
+      renderToFile(newGameState, s"test$frame.html")
+    }
     if (newGameState.hasEnded) {
       println(newGameState.score)
       (newCommands, newGameState.score)
     } else {
-      go(newGameState, newCommands)
+      go(newGameState, newCommands, verbose, frame + 1)
     }
   }
 

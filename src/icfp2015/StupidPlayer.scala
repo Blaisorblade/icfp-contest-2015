@@ -48,7 +48,7 @@ object StupidPlayer extends Player {
 
     if (newGameState.hasEnded) {
       println(newGameState.score)
-      (newCommands, gameState.score)
+      (newCommands, newGameState.score)
     } else {
       go(newGameState, newCommands, commandsProposals.tail)
     }

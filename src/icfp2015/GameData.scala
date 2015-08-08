@@ -59,8 +59,8 @@ case class Cell(x: Int, y: Int) {
   })
 
   def directionTo(other: Cell): Direction = other match {
-    case Cell(ox, oy) if oy == y     && ox == (x + 1)           => W
-    case Cell(ox, oy) if oy == y     && ox == (x - 1)           => E
+    case Cell(ox, oy) if oy == y     && ox == (x + 1)           => E
+    case Cell(ox, oy) if oy == y     && ox == (x - 1)           => W
     case Cell(ox, oy) if oy == y + 1 && ox == (x + (y % 2) - 1) => SW
     case Cell(ox, oy) if oy == y + 1 && ox == (x + (y % 2))     => SE
     case other@Cell(ox, oy) =>

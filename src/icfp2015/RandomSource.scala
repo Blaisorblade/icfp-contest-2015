@@ -19,7 +19,6 @@ object RandomSource {
   val stateMask = mask(highLimit) ^ mask(lowLimit - 1)
     //"%x" format stateMask = "7fff0000"
     //(((1 << 31) - 1) ^ ((1 << 16) - 1))
-    //0xffffffff //XXX
   def getNum(state: Int) = (state & stateMask) >> lowLimit
 
   def apply(seed: Int) = new RandomSource(seed)

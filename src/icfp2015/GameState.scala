@@ -105,7 +105,11 @@ case class GameState(
   }
 
   def move(cmd: Command, expectedValid: Boolean): GameState = {
-    assert(cmd.valid == expectedValid)
+    //Sometimes, in strange cases, our heuristics don't find solutions, so
+    //expectedValid is false, even when solutions exist. We shouldn't fail
+    //there, hence this assertion form.
+    if (expectedValid)
+      assert(cmd.valid)
     val newState =
       if (!hasEnded) {
         if (cmd.valid)

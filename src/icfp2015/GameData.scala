@@ -42,7 +42,28 @@ case class Problem(
   sourceLength: Int,
   sourceSeeds: List[Int])
 
+//Internal coordinate system. Also vectors.
+case class QCell(x: Int, y: Int) {
+  def +(other: QCell) = QCell(x + other.x, y + other.y)
+  def -(other: QCell) = QCell(x - other.x, y - other.y)
+  //Rotate clockwise around the origin.
+  def rotate60 = ???
+    //QCell(-y, x)
+
+  def toCell: Cell = Cell.tupled(toHex(x, y))
+}
+object QCellUtil {
+  def fromCell(c: Cell): QCell = QCell.tupled(fromHex(c.x, c.y))
+  val dirs =
+    List((-1, 0), (-1, -1), (0, -1), (1, 0), (1, 1), (0, 1)) map (QCell.tupled)
+  def fromDir(d: Direction) = dirs(Direction.toId(d))
+}
+
+//Official coordinate system.
 case class Cell(x: Int, y: Int) {
+  def move2(d: Direction): Cell =
+    (QCellUtil.fromCell(this) + QCellUtil.fromDir(d)).toCell
+
   def move(d: Direction): Cell = Cell.tupled(d match {
     case W  => (x - 1, y)
     case E  => (x + 1, y)
@@ -85,16 +106,12 @@ case class GameUnit(members: List[Cell], pivot: Cell) {
       move(d).move(d, n - 1)
 
   def move(to: Cell): GameUnit = {
-    val (qxp, qyp) = fromHex(pivot.x, pivot.y)
-    val (qxt, qyt) = fromHex(to.x, to.y)
+    val qPivot = QCellUtil.fromCell(pivot)
+    val qTo = QCellUtil.fromCell(to)
 
-    val dqx = qxt - qxp
-    val dqy = qyt - qyp
+    val deltaQ = qTo - qPivot
 
-    GameUnit(members map { case Cell(x, y) =>
-      val (qx, qy) = fromHex(x, y)
-      Cell.tupled(toHex(qx + dqx, qy + dqy))
-    }, to)
+    GameUnit(members map (c => (QCellUtil.fromCell(c) + deltaQ).toCell), to)
   }
 
   def exec(c: Command): GameUnit = c match {

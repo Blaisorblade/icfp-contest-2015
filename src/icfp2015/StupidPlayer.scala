@@ -40,7 +40,7 @@ object StupidPlayer extends Player {
     //If all are illegal, we pick an arbitrary one (the first) to lock the piece
     val (newGameState, next) = commandOptions.filter(_.valid).headOption match {
       case None =>
-        (gameState.lockUnit(), commandOptions.head)
+        (gameState.lockUnit(), (commandOptions :+ Move(SW)).head)
       case Some(next) =>
         (gameState.move(next), next)
     }
@@ -48,8 +48,8 @@ object StupidPlayer extends Player {
     if (newGameState.hasEnded) {
       println(newGameState.score)
       (newCommands, gameState.score)
-    }
-    else
+    } else {
       go(newGameState, newCommands, commandsProposals.tail)
+    }
   }
 }

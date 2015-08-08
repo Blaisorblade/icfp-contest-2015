@@ -23,11 +23,10 @@ object SimplePlayer extends Player {
     (Output(id, g.seed, tag, solution), score)
   }
 
-  def go(gameState: GameState, commands: List[Command]): (List[Command], Score) = {
+  def go(gameState: GameState, commandsAcc: List[Command]): (List[Command], Score) = {
     import gameState._
     assert(!hasEnded)
     assert(currentUnit.isDefined)
-
 
     //Pick command
     val pf = PathFinder(gameState)
@@ -40,19 +39,33 @@ object SimplePlayer extends Player {
       p <- pf pathTo c
     } yield (c, p)
 
-    //Move(SW) is a command that will fail, hence ensuring that the unit locks.
-    val (newgame, cmds) = solutions.headOption match {
-      case Some((pos, cmds)) =>
-        (gameState.move(pos).lockUnit(), commands ++ cmds :+ Move(SW))
+    val commandsProposals = (solutions.headOption match {
+      case Some((_, cmds)) => (cmds.toStream map (x => List(x))) ++ Stream.iterate(Nil: List[Command])(identity)
+      case None => Stream.iterate(List(SW, SE) map Move)(identity)
+    })
 
-      case None => (gameState.lockUnit(), commands :+ Move(SW))
-    }
-
-    if (newgame.hasEnded) {
-      println(newgame.score)
-      (cmds, newgame.score)
+    val (newGameState, newCommands) = nestedGo(gameState, commandsAcc, commandsProposals)
+    if (newGameState.hasEnded) {
+      println(newGameState.score)
+      (newCommands, gameState.score)
     } else {
-      go(newgame, cmds)
+      go(newGameState, newCommands)
     }
+  }
+
+  def nestedGo(gameState: GameState, commandsAcc: List[Command], commandsProposals: Seq[Seq[Command]]): (GameState, List[Command]) = {
+    import gameState._
+    val commandOptions = commandsProposals.head
+    val (newGameState, next, doStop) = commandOptions.filter(_.valid).headOption match {
+      case None =>
+        (gameState.lockUnit(), (commandOptions :+ Move(SW)).head, true)
+      case Some(next) =>
+        (gameState.move(next), next, false)
+    }
+    val newCommands = commandsAcc :+ next
+    if (newGameState.hasEnded || doStop) {
+      (gameState, newCommands)
+    } else
+      nestedGo(newGameState, newCommands, commandsProposals.tail)
   }
 }

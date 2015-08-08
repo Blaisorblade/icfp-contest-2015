@@ -47,8 +47,8 @@ case class QCell(x: Int, y: Int) {
   def +(other: QCell) = QCell(x + other.x, y + other.y)
   def -(other: QCell) = QCell(x - other.x, y - other.y)
   //Rotate clockwise around the origin.
-  def rotate60 = ???
-    //QCell(-y, x)
+  def rotate60CW = QCell(x - y, x)
+  def rotate60CCW = QCell(y, y - x)
 
   def toCell: Cell = Cell.tupled(toHex(x, y))
 }

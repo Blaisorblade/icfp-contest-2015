@@ -118,4 +118,13 @@ class DisplacementTest extends FunSpec with Matchers {
       }
     }
   }
+  describe("Q. Rotations") {
+    it("should sanityCheck") {
+      for (idx <- 0 to 5) {
+        val next = (idx + 1) % 6
+        QCellUtil.dirs(idx).rotate60CW shouldBe QCellUtil.dirs(next)
+        QCellUtil.dirs(next).rotate60CCW shouldBe QCellUtil.dirs(idx)
+      }
+    }
+  }
 }

@@ -11,8 +11,10 @@ trait Player {
 }
 
 object StupidPlayer extends Player {
+  val time = new java.util.Date
+
   def solve(p: Problem): (List[Output], Int) = {
-    val (outputs, scores) = (GameState.allGames(p) map solveState(p.id, "Try #2")).unzip
+    val (outputs, scores) = (GameState.allGames(p) map solveState(p.id, s"Stupid ($time)")).unzip
     val problemScore = scores.map(_.score).sum / scores.length
     (outputs, problemScore)
   }

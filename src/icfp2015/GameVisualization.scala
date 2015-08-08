@@ -68,16 +68,10 @@ object GameVisualization {
       fh write """</div>"""
       res
     }
-    def lock(g: GameState)(cmd: Command) = {
+    def step(g: GameState, cmd: Command, lock: Boolean) = {
       fh write """<div class="frame">"""
       fh write render(g).toString
-      fh write s"""<span class="cmd">LOCK ($cmd)</span>"""
-      fh write """</div>"""
-    }
-    def step(g: GameState, cmd: Command) = {
-      fh write """<div class="frame">"""
-      fh write render(g).toString
-      fh write s"""<span class="cmd">${cmd}</span>"""
+      fh write s"""<span class="cmd">${if (lock) "LOCK " else ""}${cmd}</span>"""
       fh write """</div>"""
     }
   }

@@ -15,11 +15,13 @@ case class GameState(
   width: Int,
   height: Int,
   currentUnit: Option[GameUnit],
-  score: Score = Score(0, 0)
+  score: Score = Score(0, 0),
+  cache: Set[CanonicalGameUnit] = Set.empty
 ) {
   def source: List[GameUnit] = sourceIdxs map units
 
   def hasEnded: Boolean = currentUnit.isEmpty
+  def resetScore = copy(score = Score(0, 0), currentUnit = None)
 
   def filled(c: Cell): Boolean = board(c.x)(c.y)
 
@@ -83,10 +85,38 @@ case class GameState(
       producedUnit.inBoard
   }
 
-  def updateCurrentUnit(newGameUnit: Option[GameUnit]) = copy(currentUnit = newGameUnit)
-  def move(cmd: Command) = updateCurrentUnit(Some(currentUnit.get.exec(cmd)))
+  def updateCurrentUnit(newGameUnit: Option[GameUnit]) = {
+    val next = copy(currentUnit = newGameUnit)
+    newGameUnit match {
+      case None => next
+      case Some(gu) =>
+        /*
+         * "When determining whether all members and the pivot have been moved
+         * "to locations that they have previously occupied", all members are
+         * treated identically. For example, rotating the unit shown on the
+         * specification page 3 times in place constitutes an error."
+         */
+        if (cache contains gu.canonicalized)
+          next.resetScore
+        else {
+          next.copy(cache = cache + gu.canonicalized)
+        }
+    }
+  }
 
-  def move(to: Cell) = updateCurrentUnit(Some(currentUnit.get.move(to)))
+  def move(cmd: Command, expectedValid: Boolean): GameState = {
+    assert(cmd.valid == expectedValid)
+    val newState =
+      if (!hasEnded) {
+        if (cmd.valid)
+          updateCurrentUnit(Some(currentUnit.get.exec(cmd)))
+        else
+          lockUnit()
+      } else {
+        resetScore
+      }
+    newState
+  }
 
   def lockUnit(): GameState = {
     assert(currentUnit.isDefined)
@@ -124,7 +154,7 @@ case class GameState(
         Nil
     val newUnit = source.headOption.flatMap(_.spawn)
 
-    GameState(newBoard, newSourceIdxs, units, seed, width, height, newUnit, score(gameUnitToLock, clearedRows))
+    GameState(newBoard, newSourceIdxs, units, seed, width, height, newUnit, score(gameUnitToLock, clearedRows), cache = Set.empty)
   }
 }
 

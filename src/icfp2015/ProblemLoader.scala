@@ -24,21 +24,17 @@ object ProblemLoader {
   //ProblemLoader.problems.map(_.sourceLength).zipWithIndex.sortBy(_._1)
 
   def solve(player: Player) = {
-
     val (outputs, scores) = (for {
       prob <- problems
       sol = player.solve(prob)
       _ = println(s"Problem ${prob.id}: score ${sol._2}")
     } yield sol).unzip
 
-    for {
-      (score, i) <- scores.zipWithIndex
-    } println(s"Problem $i: score $score")
     outputs.flatten
   }
 
   def outputJsonSolution =
-    Console.err.println(ProblemLoader.solve(SimplePlayer).toJson)
+    Console.err.println(ProblemLoader.solve(StupidPlayer).toJson)
 }
 
 case class Config(fileNames: List[String] = Nil, timeLimit: Int = -1, memoryLimit: Int = -1, cores: Int = -1, phrases: List[String] = Nil)

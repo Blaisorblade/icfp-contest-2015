@@ -40,9 +40,9 @@ public class Node<Elem> implements Comparable<Node<Elem>> {
 	// hexagon
 	public ArrayList<Node<Elem>> getNeighborList() {
 		ArrayList<Node<Elem>> neighborList = new ArrayList<Node<Elem>>();
-		if (!(y==0)) {
-			neighborList.add(map.getNode(x, (y-1)));
-		}
+		// if (!(y==0)) {
+		// 	neighborList.add(map.getNode(x, (y-1)));
+		// }
 		// if (!(y==0) && !(x==(map.getMapWith()-1))) {
 		// 	neighborList.add(map.getNode(x+1,y-1));
 		// }
@@ -61,9 +61,9 @@ public class Node<Elem> implements Comparable<Node<Elem>> {
 		if (!(x==0)) {
 			neighborList.add(map.getNode(x-1,y));
 		}
-		if (!(x==0) && !(y==0)) {
-			neighborList.add(map.getNode(x-1,y-1));
-		}
+		// if (!(x==0) && !(y==0)) {
+		// 	neighborList.add(map.getNode(x-1,y-1));
+		// }
 		return neighborList;
 	}
 

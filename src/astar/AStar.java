@@ -28,6 +28,11 @@ public class AStar<Elem> {
 
 	public ArrayList<Point> calcShortestPath() {
 
+		// only try, if it is at all possible to place something
+		// there...
+		if (!map.getGoalNode().canPlace(elem))
+			return null;
+
 		map.getStartNode().setDistanceFromStart(0);
 
 		closedList.clear();

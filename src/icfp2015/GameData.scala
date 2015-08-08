@@ -154,11 +154,7 @@ object Command {
     )
 
   def toChars(c: Command): String =
-    c match {
-      case Move(_) =>
-        throw new IllegalArgumentException
-      case _ => toCharsMap(c)
-    }
+    toCharsMap.getOrElse(c, throw new IllegalArgumentException)
 
   val fromChar =
     (for {

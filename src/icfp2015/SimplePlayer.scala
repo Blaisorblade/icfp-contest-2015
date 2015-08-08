@@ -39,12 +39,12 @@ object SimplePlayer extends Player {
       p <- pf pathTo c
     } yield (c, p)
 
+    //Move(SW) is a command that will fail, hence ensuring that the unit locks.
     val (newgame, cmds) = solutions.headOption match {
       case Some((pos, cmds)) =>
-        (gameState.move(pos).lockUnit(), commands ++ cmds)
+        (gameState.move(pos).lockUnit(), commands ++ cmds :+ Move(SW))
 
-      // what command to I use to lock here?
-      case None => (gameState.lockUnit(), commands)
+      case None => (gameState.lockUnit(), commands :+ Move(SW))
     }
 
     if (newgame.hasEnded) {

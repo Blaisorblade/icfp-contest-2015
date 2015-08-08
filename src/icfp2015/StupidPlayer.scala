@@ -1,7 +1,5 @@
 package icfp2015
 
-import Game._
-
 /**
  * @author pgiarrusso
  */

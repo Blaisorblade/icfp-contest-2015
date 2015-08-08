@@ -1,7 +1,5 @@
 package icfp2015
 
-import spray.json._
-
 // Unit -> GameUnit
 trait Direction
 case object NW extends Direction
@@ -153,11 +151,14 @@ case class Output(
   solution: String)
 
 
-object HoneycombProtocol extends DefaultJsonProtocol {
-  implicit val cellFormat    = jsonFormat2(Cell)
-  implicit val unitFormat    = jsonFormat2(GameUnit)
-  implicit val problemFormat = jsonFormat7(Problem)
-
-  implicit val outputFormat  = jsonFormat4(Output)
+case class Score(score: Int, lastLines: Int) {
+  // Compute the score for the given game unit and the
+  // number of cleared lines
+  def apply(unit: GameUnit, lines: Int): Score = {
+    val points = unit.size + 100 * (1 + lines) * lines / 2
+    val lineBonus: Int = if (lastLines > 1) {
+      (lastLines - 1) * points / 10
+    } else 0
+    Score(score + points + lineBonus, lines)
+  }
 }
-

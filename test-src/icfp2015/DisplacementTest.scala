@@ -33,8 +33,6 @@ class DisplacementTest extends FunSpec with Matchers {
     c.move(E)  shouldBe Cell(2, 1)
   }
 
-  import Game._
-
   val dummyGameUnit = GameUnit(Nil, Cell(0, 0))
 
   val aGameState = GameState(Board.empty(10, 10), Nil, Nil, -1, 10, 10, Some(dummyGameUnit))

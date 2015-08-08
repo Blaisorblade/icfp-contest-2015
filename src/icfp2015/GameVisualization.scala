@@ -2,7 +2,7 @@ package icfp2015
 
 import java.io._
 
-trait GameVisualization { self: Game =>
+object GameVisualization {
 
   def render(g: GameState) = {
     import g._

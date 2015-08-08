@@ -1,6 +1,6 @@
 package icfp2015
 
-import Game._
+import GameVisualization._
 
 object SimplePlayer extends Player {
 

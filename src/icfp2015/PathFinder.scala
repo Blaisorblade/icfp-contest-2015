@@ -5,7 +5,6 @@ import scala.collection.JavaConversions._
 import astar._
 import astar.heuristics._
 
-import Game._
 case class PathFinder(game: GameState) {
 
   import game._

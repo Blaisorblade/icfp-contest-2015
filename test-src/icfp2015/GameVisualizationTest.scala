@@ -5,10 +5,7 @@ import org.scalatest._
 import org.scalatest.matchers._
 
 class GameVisualizationTest extends FunSpec with Matchers {
-
-  object Game extends Game with GameVisualization
-
-  import Game._
+  import GameVisualization._
 
   val board = Board.empty(5, 15)
   board(0)(14) = true

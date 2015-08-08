@@ -3,8 +3,11 @@ package icfp2015
 import Game._
 
 object SimplePlayer extends Player {
+
+  val time = new java.util.Date
+
   def solve(p: Problem): (List[Output], Int) = {
-    val (outputs, scores) = (GameState.allGames(p) map solveState(p.id, "Try #2")).unzip
+    val (outputs, scores) = (GameState.allGames(p) map solveState(p.id, s"Simple ($time)")).unzip
     val problemScore = scores.map(_.score).sum / scores.length
     (outputs, problemScore)
   }

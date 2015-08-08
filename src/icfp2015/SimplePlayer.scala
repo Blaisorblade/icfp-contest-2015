@@ -13,7 +13,7 @@ object SimplePlayer extends Player {
   }
 
   //For debug
-  val focusedProbId = None
+  val focusedProbId = -1
   val dumpedFrames = 10
 
   def solveState(id: Int, tag: String)(g: GameState): (Output, Score) = {
@@ -22,7 +22,7 @@ object SimplePlayer extends Player {
     //Evaluate solutions
     //Choose the best.
     assert(!g.hasEnded)
-    val verbose = Some(id) == focusedProbId
+    val verbose = id == focusedProbId
     if (verbose)
       renderToFile(g, "test.html")
 

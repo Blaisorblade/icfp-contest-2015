@@ -47,7 +47,7 @@ object SimplePlayer extends Player {
     val (newGameState, newCommands) = nestedGo(gameState, commandsAcc, commandsProposals)
     if (newGameState.hasEnded) {
       println(newGameState.score)
-      (newCommands, gameState.score)
+      (newCommands, newGameState.score)
     } else {
       go(newGameState, newCommands)
     }
@@ -64,7 +64,7 @@ object SimplePlayer extends Player {
     }
     val newCommands = commandsAcc :+ next
     if (newGameState.hasEnded || doStop) {
-      (gameState, newCommands)
+      (newGameState, newCommands)
     } else
       nestedGo(newGameState, newCommands, commandsProposals.tail)
   }

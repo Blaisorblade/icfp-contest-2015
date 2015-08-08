@@ -1,4 +1,4 @@
-package CDIO.pathFinder.bresenhamsLine;
+package astar.bresenhamsLine;
 
 import java.awt.Point;
 import java.util.ArrayList;

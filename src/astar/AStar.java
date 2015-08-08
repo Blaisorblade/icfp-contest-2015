@@ -1,10 +1,10 @@
-package CDIO.pathFinder;
+package astar;
 
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import CDIO.pathFinder.heuristics.AStarHeuristic;
+import astar.heuristics.AStarHeuristic;
 
 public class AStar<Elem> {
 	private AreaMap map;

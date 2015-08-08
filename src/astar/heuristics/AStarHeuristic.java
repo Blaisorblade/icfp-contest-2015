@@ -1,4 +1,4 @@
-package CDIO.pathFinder.heuristics;
+package astar.heuristics;
 
 import java.awt.Point;
 

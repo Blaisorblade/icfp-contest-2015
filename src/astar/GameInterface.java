@@ -1,4 +1,4 @@
-package CDIO.pathFinder;
+package astar;
 
 public interface GameInterface<Elem> {
 	public int width();

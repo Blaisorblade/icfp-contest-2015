@@ -6,8 +6,8 @@ import org.scalatest.matchers._
 
 import scala.collection.JavaConversions._
 
-import CDIO.pathFinder._
-import CDIO.pathFinder.heuristics._
+import astar._
+import astar.heuristics._
 
 class AStarTest extends FunSpec with Matchers {
 

@@ -47,12 +47,13 @@ object SimplePlayer extends Player {
       p <- pf pathTo c
     } yield (c, p)
 
-    val commandsProposals = (solutions.headOption match {
-      case Some((_, cmds)) => (cmds.toStream map (x => List(x))) ++ Stream.iterate(Nil: List[Command])(identity)
-      case None => Stream.iterate(List(SW, SE) map Move)(identity)
-    })
+    //Move(SW) is a command that will fail, hence ensuring that the unit locks.
+    val (newGameState, newCommands) = solutions.headOption match {
+      case Some((pos, newCommands)) =>
+        (gameState.move(pos).lockUnit(), commandsAcc ++ newCommands :+ Move(SW))
+      case None => (gameState.lockUnit(), commandsAcc :+ Move(SW))
+    }
 
-    val (newGameState, newCommands) = nestedGo(gameState, commandsAcc, commandsProposals)
     if (verbose && frame < dumpedFrames) {
       println(s"Frame $frame: commands '$newCommands'")
       renderToFile(newGameState, s"test$frame.html")
@@ -63,21 +64,5 @@ object SimplePlayer extends Player {
     } else {
       go(newGameState, newCommands, verbose, frame + 1)
     }
-  }
-
-  def nestedGo(gameState: GameState, commandsAcc: List[Command], commandsProposals: Seq[Seq[Command]]): (GameState, List[Command]) = {
-    import gameState._
-    val commandOptions = commandsProposals.head
-    val (newGameState, next, doStop) = commandOptions.filter(_.valid).headOption match {
-      case None =>
-        (gameState.lockUnit(), Move(SW), true)
-      case Some(next) =>
-        (gameState.move(next), next, false)
-    }
-    val newCommands = commandsAcc :+ next
-    if (newGameState.hasEnded || doStop) {
-      (newGameState, newCommands)
-    } else
-      nestedGo(newGameState, newCommands, commandsProposals.tail)
   }
 }

@@ -43,9 +43,11 @@ trait Game {
     def filled(c: Cell): Boolean = board(c.x)(c.y)
 
     implicit class CellOps(self: Cell) {
+      def inBoard =
+        self.inside(Cell(0, 0), Cell(width - 1, height - 1))
 
       def valid: Boolean =
-        self.inside(Cell(0, 0), Cell(width - 1, height - 1)) && !filled(self)
+        inBoard && !filled(self)
 
       def apply(d: Direction): Option[Cell] = {
         val c = self.move(d)
@@ -54,6 +56,9 @@ trait Game {
     }
 
     implicit class UnitOps(self: GameUnit) {
+      def inBoard: Boolean =
+        self.members.forall(_.inBoard)
+
       def valid: Boolean =
         self.members.forall(_.valid)
 
@@ -82,14 +87,19 @@ trait Game {
     }
 
     implicit class CommandOps(self: Command) {
-      def valid: Boolean = {
+      def producedUnit: GameUnit =
         currentUnit match {
           case None =>
             throw new IllegalArgumentException
           case Some(unit) =>
-            (unit exec self).valid
+            (unit exec self)
         }
-      }
+
+      def valid: Boolean =
+        producedUnit.valid
+
+      def inBoard: Boolean =
+        producedUnit.inBoard
     }
 
     def updateCurrentUnit(newGameUnit: Option[GameUnit]) = copy(currentUnit = newGameUnit)

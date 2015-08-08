@@ -156,6 +156,7 @@ case class GameState(
 
     GameState(newBoard, newSourceIdxs, units, seed, width, height, newUnit, score(gameUnitToLock, clearedRows), cache = Set.empty)
   }
+  def initialSpawn = copy(currentUnit = currentUnit.flatMap(_.spawn))
 }
 
 object GameState {
@@ -177,7 +178,7 @@ object GameState {
     filled.foreach { case Cell(x, y) => board(x)(y) = true }
 
     //Preload the first GameUnit
-    GameState(board, sourceIdxs.tail, units, seed, width, height, Some(units(sourceIdxs.head)))
+    GameState(board, sourceIdxs.tail, units, seed, width, height, Some(units(sourceIdxs.head))).initialSpawn
   }
 }
 

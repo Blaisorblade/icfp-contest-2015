@@ -6,7 +6,6 @@ import java.util.ArrayList;
 public class Node<Elem> implements Comparable<Node<Elem>> {
 	/* Nodes that this is connected to */
 	AreaMap<Elem> map;
-	boolean visited;
 	float distanceFromStart;
 	float heuristicDistanceFromGoal;
 	Node<Elem> previousNode;
@@ -20,17 +19,15 @@ public class Node<Elem> implements Comparable<Node<Elem>> {
 		this.x = x;
 		this.y = y;
 		this.map = map;
-		this.visited = false;
 		this.distanceFromStart = Integer.MAX_VALUE;
 		this.isStart = false;
 		this.isGoal = false;
 	}
 
-	Node (int x, int y, AreaMap<Elem> map, boolean visited, int distanceFromStart, boolean isStart, boolean isGoal) {
+	Node (int x, int y, AreaMap<Elem> map, int distanceFromStart, boolean isStart, boolean isGoal) {
 		this.x = x;
 		this.y = y;
 		this.map = map;
-		this.visited = visited;
 		this.distanceFromStart = distanceFromStart;
 		this.isStart = isStart;
 		this.isGoal = isGoal;
@@ -65,14 +62,6 @@ public class Node<Elem> implements Comparable<Node<Elem>> {
 		// 	neighborList.add(map.getNode(x-1,y-1));
 		// }
 		return neighborList;
-	}
-
-	public boolean isVisited() {
-		return visited;
-	}
-
-	public void setVisited(boolean visited) {
-		this.visited = visited;
 	}
 
 	public float getDistanceFromStart() {

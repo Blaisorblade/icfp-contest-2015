@@ -45,18 +45,23 @@ object SimplePlayer extends Player {
     assert(currentUnit.isDefined)
 
     //Pick command
-    val pf = PathFinder(gameState)
+    val pf = PathFinderPrime(gameState)
+
+    val curr = gameState.currentUnit.get
 
     // order possible pivot-slots by priority
     val solutions = for {
-      row <- ((height - 1) to 0 by -1).view
-      col <- 0 until width
-      c = Cell(col, row)
-      p <- pf pathTo c
-    } yield (c, p)
+      row <- (height to 0 by -1).view
+      col <- 0 until (width + 4)
+      rot <- 0 until curr.symmetry
+      rotated = curr rotate rot
+      newCurr = rotated move Cell(col, row)
+      if newCurr.valid
+      p <- pf pathTo newCurr
+    } yield p
 
     val commandsProposals = (solutions.headOption match {
-      case Some((_, cmds)) => (cmds.toStream map (x => List(x))) ++ Stream.iterate(Nil: List[Command])(identity)
+      case Some(cmds) => (cmds.toStream map (x => List(x))) ++ Stream.iterate(Nil: List[Command])(identity)
       case None => Stream.iterate(List(SW, SE) map Move)(identity)
     })
 
@@ -85,6 +90,7 @@ object SimplePlayer extends Player {
       case Some(next) =>
         (next, true)
     }
+    viz.step(gameState, next, lock = !valid)
     val newGameState = gameState.move(next, valid)
     val newCommands = commandsAcc :+ next
 

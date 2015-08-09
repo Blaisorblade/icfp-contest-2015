@@ -6,8 +6,13 @@ object SimplePlayer extends Player {
 
   val time = new java.util.Date
 
-  def solve(p: Problem): (List[Output], Int) = {
-    val (outputs, scores) = (GameState.allGames(p) map solveState(p.id, s"Simple ($time)")).unzip
+  val viz = new DummyVisualizer
+
+  def solve(p: Problem): (List[Output], Int) = viz.problem(p) {
+    val (outputs, scores) = (GameState.allGames(p).map { game =>
+      viz.game(game) { solveState(p.id, s"Simple ($time)")(game) }
+    }).unzip
+
     val problemScore = scores.map(_.score).sum / scores.length
     (outputs, problemScore)
   }

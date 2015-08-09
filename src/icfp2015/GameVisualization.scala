@@ -76,6 +76,12 @@ object GameVisualization {
     }
   }
 
+  class DummyVisualizer extends Visualizer {
+    override def problem[T](p: Problem)(block: => T): T = block
+    override def game[T](g: GameState)(block: => T): T = block
+    override def step(g: GameState, cmd: Command, lock: Boolean) = ()
+  }
+
   private def debugFile(name: String) = new File(s"debug_${name}.html")
 
   def renderToFile(g: GameState, filePath: String) = {

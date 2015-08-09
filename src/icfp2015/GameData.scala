@@ -117,6 +117,12 @@ case class GameUnit(members: List[Cell], pivot: Cell, orientation: Int = 0) {
 
     GameUnit(members map (c => (QCellUtil.fromCell(c) + deltaQ).toCell), to)
   }
+
+  def rotate(neworientation: Int): GameUnit =
+    if (neworientation == orientation) this
+    else if (neworientation > orientation) rotate(true).rotate(neworientation)
+    else rotate(false).rotate(neworientation)
+
   def rotate(clockwise: Boolean): GameUnit = {
     val qPivot = QCellUtil.fromCell(pivot)
     val newMembers = members.map(member => (qPivot + (QCellUtil.fromCell(member) - qPivot).rotate(clockwise)).toCell)
@@ -131,7 +137,10 @@ case class GameUnit(members: List[Cell], pivot: Cell, orientation: Int = 0) {
 
   def size: Int = members.size
 
-  def canonicalized = CanonicalGameUnit(members.toSet, pivot)
+  lazy val canonicalized = CanonicalGameUnit(members.toSet, pivot)
+
+  // how many different options to rotate exist?
+  lazy val symmetry = (0 to 5).map(rotate).map(_.canonicalized).toSet.size
 }
 
 case class CanonicalGameUnit(members: Set[Cell], pivot: Cell)

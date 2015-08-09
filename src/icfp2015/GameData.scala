@@ -96,7 +96,9 @@ case class Cell(x: Int, y: Int) {
     x <= lowerRight.x && y <= lowerRight.y
 }
 
-case class GameUnit(members: List[Cell], pivot: Cell) {
+// orientation = (0 - 5)
+case class GameUnit(members: List[Cell], pivot: Cell, orientation: Int = 0) {
+
   def move(d: Direction): GameUnit = GameUnit(
     members map (_ move d),
     pivot move d)
@@ -118,7 +120,8 @@ case class GameUnit(members: List[Cell], pivot: Cell) {
   def rotate(clockwise: Boolean): GameUnit = {
     val qPivot = QCellUtil.fromCell(pivot)
     val newMembers = members.map(member => (qPivot + (QCellUtil.fromCell(member) - qPivot).rotate(clockwise)).toCell)
-    GameUnit(newMembers, pivot)
+    val neworientation = if (clockwise) (orientation + 1) % 6 else (orientation - 1) % 6
+    GameUnit(newMembers, pivot, neworientation)
   }
 
   def exec(c: Command): GameUnit = c match {

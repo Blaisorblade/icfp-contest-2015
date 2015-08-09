@@ -19,7 +19,7 @@ object GameVisualization {
       if (filled(c)) classes = classes :+ "filled"
 
       currentUnit.map {
-        case GameUnit(cs, pivot) =>
+        case GameUnit(cs, pivot, _) =>
           if (cs contains c) classes = classes :+ "unit"
           if (pivot == c) classes = classes :+ "pivot"
       }

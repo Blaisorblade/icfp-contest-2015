@@ -127,4 +127,19 @@ class DisplacementTest extends FunSpec with Matchers {
       }
     }
   }
+
+  describe("Symmetry detection") {
+
+    val cube = GameUnit(List(Cell(0, 0)), Cell(0, 0))
+    val stick = GameUnit(List(Cell(0, 0), Cell(0, 1), Cell(1, 2)), Cell(0, 1))
+    val cross = GameUnit(List(
+      Cell(1, 0), Cell(0, 1), Cell(1, 1), Cell(2, 1), Cell(2, 2)), Cell(1, 1))
+    val flower = GameUnit(List(
+      Cell(1, 0), Cell(0, 1), Cell(2, 0), Cell(2, 1), Cell(2, 2), Cell(1, 2)), Cell(1, 1))
+
+    cube.symmetry shouldBe 1
+    stick.symmetry shouldBe 3
+    cross.symmetry shouldBe 3
+    flower.symmetry shouldBe 1
+  }
 }

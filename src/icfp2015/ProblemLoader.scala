@@ -31,7 +31,7 @@ object ProblemLoader {
 
   def solve(player: Player) = {
     val (outputs, scores) = (for {
-      prob <- problems
+      prob <- problems.par
       sol = player.solve(prob)
       _ = println(s"Problem ${prob.id}: score ${sol._2}")
     } yield sol).unzip
@@ -41,7 +41,7 @@ object ProblemLoader {
 
   def outputJsonSolution =
     //NOTE: Use StupidPlayer for the other, more stupid but safer, heuristic.
-    Console.err.println(ProblemLoader.solve(SimplePlayer).toJson)
+    Console.err.println(ProblemLoader.solve(SimplePlayer).toList.toJson)
 }
 
 case class Config(fileNames: List[String] = Nil, timeLimit: Int = -1, memoryLimit: Int = -1, cores: Int = -1, phrases: List[String] = Nil)
